@@ -3,239 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Vé Máy Bay v11.5 - Tối ưu Slogan & PDF</title>
+    <title>Hệ thống Vé v24.6 - Sen Việt Group (Smart Filename)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --primary-color: #005aab; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #e9ecef; padding: 10px; color: #333; }
+        :root { --current-theme: #006784; }
+        body { font-family: 'Arial', sans-serif; background-color: #444; padding: 20px; color: #333; margin: 0; }
         
-        .admin-panel {
-            max-width: 800px; margin: 0 auto 10px; background: white; border-radius: 8px;
-            padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 5px solid var(--primary-color);
+        .admin-panel { max-width: 850px; margin: 0 auto 15px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-top: 5px solid var(--current-theme); }
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .btn-action { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        #ticket-wrapper { background: #fff; width: 850px; margin: 0 auto; box-shadow: 0 0 25px rgba(0,0,0,0.2); }
+        .ticket-header { background: var(--current-theme); padding: 15px 30px; display: flex; align-items: center; }
+        .logo-main { height: 45px; }
+
+        .pnr-row { padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .pnr-box { background: var(--current-theme); color: white; padding: 12px 25px; border-radius: 6px; font-size: 19px; font-weight: bold; }
+
+        .status-wrapper { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 15px; }
+        .status-box { border: 2px solid #28a745; padding: 6px 15px; border-radius: 6px; text-transform: uppercase; }
+
+        .section-tag { margin: 10px 30px; display: flex; align-items: center; font-size: 18px; font-weight: bold; }
+        .section-tag::before { content: ""; display: inline-block; width: 4px; height: 20px; background: var(--current-theme); margin-right: 10px; }
+
+        .pax-item { background: #f8f9fa; margin: 5px 30px 12px; padding: 12px 20px; border: 1px solid #eee; border-radius: 6px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .pax-del-btn { color: #e31937; cursor: pointer; font-size: 18px; border: none; background: none; font-weight: bold; }
+
+        .flight-card { border: 1px solid #ddd; border-radius: 12px; margin: 0 30px 20px; overflow: hidden; }
+        .flight-bar { background: var(--current-theme); color: white; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .mini-logo { background: white; padding: 3px 10px; border-radius: 4px; display: flex; align-items: center; height: 22px; }
+        .mini-logo img { height: 16px; }
+
+        .flight-main-body { display: flex; padding: 25px 20px; }
+        .f-info-left { flex: 2; border-right: 1px dotted #999; padding-right: 20px; }
+        .f-info-right { flex: 1; padding-left: 25px; font-size: 13px; line-height: 1.9; }
+
+        .timeline-container { flex-grow: 1; margin: 0 15px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 150px; }
+        .timeline-line { width: 100%; height: 1px; border-top: 1px dotted var(--current-theme); position: absolute; top: 50%; left: 0; z-index: 1; }
+        .timeline-dot { width: 7px; height: 7px; background: var(--current-theme); border-radius: 50%; position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+        .dot-left { left: 0; }
+        .dot-right { right: 0; }
+        .dur-txt-box { background: white; padding: 0 12px; font-size: 12px; color: var(--current-theme); font-weight: bold; position: relative; z-index: 3; }
+
+        .clean-select { border: none; background: transparent; font-weight: bold; color: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; }
+
+        .footer-banner { background: var(--current-theme); color: white; padding: 8px 20px; margin: 0 30px; font-weight: bold; }
+        .footer-text { border: 1px solid #ddd; margin: 0 30px 20px; padding: 15px; font-size: 12px; line-height: 1.7; }
+        .bottom-strip { background: var(--current-theme); padding: 12px 30px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .remove-btn { background: rgba(0,0,0,0.2); border: none; color: white; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+
+        [contenteditable="true"]:hover { background: #fffde7; outline: 1px dashed #ccc; }
+
+        @media print { 
+            .admin-panel, .remove-btn, .pax-del-btn { display: none !important; } 
+            .clean-select { appearance: none !important; -webkit-appearance: none !important; }
+            .pax-item { background: #f8f9fa !important; border: 1px solid #eee !important; -webkit-print-color-adjust: exact; }
+            .pnr-box { background: var(--current-theme) !important; -webkit-print-color-adjust: exact; }
+            .status-box { -webkit-print-color-adjust: exact; }
         }
-        .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-action { background: #f0f2f5; color: #333; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; border: 1px solid #ddd; font-weight: 600; }
-        
-        #ticket-wrapper { background: #fff; width: 800px; margin: 0 auto; display: block; overflow: visible; }
-        #ticket-content { background: #fff; border: 1px solid #ddd; width: 100%; display: block; overflow: visible; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 3px solid var(--primary-color); }
-        .logo-container img { height: 45px; width: auto; max-width: 200px; }
-
-        .section-title { background: var(--primary-color); color: white; padding: 6px 20px; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-        [contenteditable="true"]:hover { background: #fffde7; outline: 1px dashed var(--primary-color); }
-
-        .content-padding { padding: 8px 20px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 2px; }
-        th { text-align: left; background: #f8f9fa; font-size: 10px; padding: 8px; border: 1px solid #eee; }
-        td { padding: 8px; border: 1px solid #eee; vertical-align: middle; font-size: 13px; }
-
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 12px 20px; background: #fdfdfd; border-top: 1px solid #eee; }
-        .info-item { font-size: 11px; line-height: 1.4; }
-        .info-item strong { color: var(--primary-color); display: block; margin-bottom: 4px; text-transform: uppercase; border-bottom: 1px solid #eee; }
-
-        #return-flight-section, .return-baggage-row { display: none; }
-        
-        .stamps-container { display: flex; justify-content: space-between; align-items: flex-end; padding: 15px 25px; border-top: 1px dashed #ddd; margin-top: 5px; min-height: 120px; }
-        .qr-code img { width: 85px; height: 85px; padding: 4px; border: 1px solid #eee; background: white; }
-        .paid-stamp { border: 2px solid #28a745; color: #28a745; padding: 6px 12px; font-weight: bold; border-radius: 4px; transform: rotate(-5deg); font-size: 14px; margin-bottom: 15px; }
-
-        @media print { .admin-panel, .action-col { display: none !important; } }
     </style>
 </head>
 <body>
 
 <div class="admin-panel">
     <div class="controls">
-        <select class="btn-action" id="airline-theme" onchange="changeTheme()">
+        <select class="btn-action" id="airline-select" onchange="updateTheme()">
             <option value="vna">✈️ Vietnam Airlines</option>
             <option value="vj">✈️ Vietjet Air</option>
-            <option value="sun">✈️ Sun PhuQuoc Airways</option>
+            <option value="sun">✈️ Sun PhuQuoc</option>
         </select>
-        <label class="btn-action" onclick="document.getElementById('logo-upload').click()">📁 ĐỔI LOGO</label>
-        <input type="file" id="logo-upload" accept="image/*" style="display: none;" onchange="loadLogo(event)">
-        <button class="btn-action" onclick="addPassenger()">👤 + KHÁCH</button>
-        <div style="font-size:12px; font-weight:bold; color:var(--primary-color);">
-            <input type="checkbox" id="roundtrip-toggle" onchange="toggleTripMode()"> KHỨ HỒI
-        </div>
-        <button class="btn-action" style="background:#28a745; color:white; margin-left:auto;" onclick="exportToPDF()">📥 TẢI VỀ PDF (FULL)</button>
+        <button class="btn-action" onclick="document.getElementById('logo-main-in').click()">🖼️ LOGO CHÍNH</button>
+        <input type="file" id="logo-main-in" hidden onchange="loadMainLogo(event)">
+        <button class="btn-action" onclick="document.getElementById('logo-sub-in').click()">⬜ LOGO PHỤ</button>
+        <input type="file" id="logo-sub-in" hidden onchange="loadSubLogo(event)">
+        <button class="btn-action" onclick="addPassenger()">👤 + Khách</button>
+        <button class="btn-action" style="background:var(--current-theme); color:white;" onclick="addFlightBlock()">✈️ + CHẶNG</button>
+        <button class="btn-action" style="background:#28a745; color:white; margin-left:auto;" onclick="exportPDF()">📥 XUẤT PDF</button>
     </div>
 </div>
 
 <div id="ticket-wrapper">
-<div id="ticket-content">
-    <div class="header">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="logo-container"><img id="ticket-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png"></div>
-            <div style="display: flex; flex-direction: column; justify-content: center;">
-                <div id="airline-display-name" style="font-weight: bold; font-size: 18px; line-height: 1;" contenteditable="true">VIETNAM AIRLINES</div>
-                <div id="airline-slogan" style="font-size: 10px; opacity: 0.8; margin-top: 4px;" contenteditable="true">Thành viên của SkyTeam</div>
+    <div id="ticket-content">
+        <div class="ticket-header" id="header-bg">
+            <img id="ticket-logo" class="logo-main" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png">
+        </div>
+
+        <div class="pnr-row">
+            <div class="pnr-box">Mã đặt chỗ: <span id="pnr-val" contenteditable="true">BOOKING</span></div>
+            <div class="status-wrapper">
+                Trạng thái: 
+                <div class="status-box" id="status-container">
+                    <select class="clean-select" onchange="handleStatusChange(this)">
+                        <option value="paid">Đã thanh toán</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="pending">Chờ thanh toán</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div style="text-align: right;">
-            <div style="font-size: 10px; opacity: 0.7;">MÃ ĐẶT CHỖ / PNR</div>
-            <div id="pnr-input" style="font-size: 24px; font-weight: bold; color: var(--primary-color); letter-spacing: 1px;" contenteditable="true">FXLXQW</div>
-        </div>
-    </div>
 
-    <div class="section-title">Hành khách / Passenger</div>
-    <div class="content-padding">
-        <table id="passenger-table">
-            <thead>
-                <tr><th width="15%">DANH XƯNG</th><th width="45%">HỌ VÀ TÊN</th><th width="35%">TÌNH TRẠNG</th><th width="5%" class="action-col"></th></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td contenteditable="true">MR</td>
-                    <td class="passenger-name" style="font-weight: bold; text-transform: uppercase;" contenteditable="true">NGUYEN HOAI ANH</td>
-                    <td contenteditable="true">CONFIRMED / OK</td>
-                    <td class="action-col" onclick="removePassenger(this)" style="color:red; cursor:pointer; text-align:center;">×</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="section-title">Hành lý & Quy định / Baggage & Policy</div>
-    <div class="info-grid">
-        <div class="info-item">
-            <strong>Hành lý (Baggage)</strong>
-            <table style="border: none;">
-                <tr><td style="border:none; padding:2px 0; font-size:11px;">✈️ Ký gửi:</td><td style="border:none; font-weight:bold; font-size:11px;" contenteditable="true">23kg (01 kiện)</td></tr>
-                <tr class="return-baggage-row"><td style="border:none; padding:2px 0; font-size:11px;">✈️ Chiều về:</td><td style="border:none; font-weight:bold; font-size:11px;" contenteditable="true">23kg (01 kiện)</td></tr>
-                <tr><td style="border:none; padding:2px 0; font-size:11px;">👜 Xách tay:</td><td style="border:none; font-weight:bold; color: #d93025; font-size:11px;" contenteditable="true">12kg (Tối đa)</td></tr>
-            </table>
-        </div>
-        <div class="info-item">
-            <strong>Lưu ý sân bay (Airport Notes)</strong>
-            <div contenteditable="true" style="font-size: 10px;">
-                • <b>Nội địa:</b> Có mặt trước <b>90 phút</b>.<br>
-                • <b>Quốc tế:</b> Có mặt trước <b>180 phút</b>.<br>
-                • Đóng quầy trước giờ bay 40-50 phút.
+        <div class="section-tag">Thông tin hành khách</div>
+        <div id="passenger-list">
+            <div class="pax-item">
+                <span class="pax-name" contenteditable="true">VUONG TIEN MANH</span>
+                <button class="pax-del-btn" onclick="this.parentElement.remove()">×</button>
             </div>
         </div>
-    </div>
 
-    <div class="section-title">Chuyến đi / Departure Flight</div>
-    <div class="content-padding">
-        <table>
-            <thead><tr><th>CHUYẾN BAY</th><th>NGÀY</th><th>KHỞI HÀNH</th><th>ĐẾN</th></tr></thead>
-            <tbody>
-                <tr>
-                    <td contenteditable="true"><strong>VN 357</strong></td>
-                    <td contenteditable="true">28/05/2026</td>
-                    <td contenteditable="true"><strong>FUKUOKA (FUK)</strong><br><b>10:00</b></td>
-                    <td contenteditable="true"><strong>HA NOI (HAN)</strong><br><b>12:30</b></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="section-tag">Thông tin chuyến bay</div>
+        <div id="flight-list"></div>
 
-    <div id="return-flight-section">
-        <div class="section-title">Chuyến về / Return Flight</div>
-        <div class="content-padding">
-            <table>
-                <thead><tr><th>CHUYẾN BAY</th><th>NGÀY</th><th>KHỞI HÀNH</th><th>ĐẾN</th></tr></thead>
-                <tbody>
-                    <tr>
-                        <td contenteditable="true"><strong>VN 356</strong></td>
-                        <td contenteditable="true">31/05/2026</td>
-                        <td contenteditable="true"><strong>HA NOI (HAN)</strong><br><b>01:30</b></td>
-                        <td contenteditable="true"><strong>FUKUOKA (FUK)</strong><br><b>07:35</b></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="footer-banner">Quý khách lưu ý</div>
+        <div class="footer-text" contenteditable="true">
+            - Quý khách có mặt tại sân bay trước 90 phút (nội địa), 180 phút (quốc tế).<br>
+            - Vé phải được sử dụng đúng và đủ thứ tự chuyến bay trên mặt vé.<br><br>
+            <b>Cảm ơn quý khách đã sử dụng dịch vụ của Sen Việt Group! Chúc quý khách chuyến bay tốt đẹp!</b>
+        </div>
+
+        <div class="bottom-strip">
+            <div contenteditable="true">SEN VIỆT TRAVEL GROUP</div>
+            <div contenteditable="true" style="font-size: 15px;">Hotline: 0328.282828</div>
         </div>
     </div>
-
-    <div class="stamps-container">
-        <div class="qr-code"><img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=FXLXQW-NGUYEN-HOAI-ANH"></div>
-        <div class="paid-stamp" contenteditable="true">ĐÃ THANH TOÁN</div>
-        <div style="text-align: right; font-size: 11px;">
-            <strong contenteditable="true" style="color: var(--primary-color);">SEN VIỆT TRAVEL GROUP</strong><br>
-            <span contenteditable="true">Hotline: 0328.282828</span>
-        </div>
-    </div>
-</div>
 </div>
 
 <script>
-    function changeTheme() {
-        const theme = document.getElementById('airline-theme').value;
-        const logo = document.getElementById('ticket-logo');
-        const name = document.getElementById('airline-display-name');
-        const slogan = document.getElementById('airline-slogan');
-        const root = document.documentElement;
+    let uploadedSubLogo = null;
+    const configs = {
+        vna: { theme: "#006784", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png", hand: "10kg", classes: ["Economy", "Premium", "Business"], check: ["23kg / 1 kiện", "46kg / 2 kiện", "32kg / 1 kiện", "64kg / 2 kiện"], op: "Vietnam Airlines" },
+        vj: { theme: "#e31937", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8d/VietJet_Air_logo.png", hand: "07kg", classes: ["Economy", "Deluxe", "SkyBoss"], check: ["20kg", "30kg", "40kg", "Không ký gửi"], op: "Vietjet Air" },
+        sun: { theme: "#8b0000", logo: "https://i.ibb.co/Vvz8jYq/sun-pq-logo.png", hand: "07kg", classes: ["Economy"], check: ["23kg / 1 kiện"], op: "Sun PhuQuoc Airways" }
+    };
 
-        if (theme === 'sun') {
-            logo.src = "https://i.ibb.co/Vvz8jYq/sun-pq-logo.png";
-            name.innerText = "SUN PHU QUOC AIRWAYS";
-            slogan.innerText = "Nâng tầm trải nghiệm nghỉ dưỡng";
-            root.style.setProperty('--primary-color', '#002366');
-        } else if (theme === 'vj') {
-            logo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/VietJet_Air_logo.svg/1280px-VietJet_Air_logo.svg.png";
-            name.innerText = "VIETJET AIR";
-            slogan.innerText = "Bay là thích ngay!";
-            root.style.setProperty('--primary-color', '#e31937');
-        } else {
-            logo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png";
-            name.innerText = "VIETNAM AIRLINES";
-            slogan.innerText = "Thành viên của SkyTeam";
-            root.style.setProperty('--primary-color', '#005aab');
-        }
-        updateQR();
+    function handleStatusChange(sel) {
+        const box = document.getElementById('status-container');
+        if(sel.value === 'pending') { box.style.borderColor = "#fd7e14"; sel.style.color = "#fd7e14"; } 
+        else { box.style.borderColor = "#28a745"; sel.style.color = "#28a745"; }
     }
 
-    function exportToPDF() {
-        const element = document.getElementById('ticket-content');
-        const pnr = document.getElementById('pnr-input').innerText.trim();
-        const actionCols = document.querySelectorAll('.action-col');
-        
-        actionCols.forEach(col => col.style.display = 'none');
+    function updateTheme() {
+        const type = document.getElementById('airline-select').value;
+        const cfg = configs[type];
+        document.documentElement.style.setProperty('--current-theme', cfg.theme);
+        document.getElementById('header-bg').style.backgroundColor = cfg.theme;
+        document.getElementById('ticket-logo').src = cfg.logo;
 
-        const opt = {
-            margin: 0.1,
-            filename: `Ve_${pnr}.pdf`,
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, useCORS: true, scrollY: 0, windowHeight: element.scrollHeight },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait', compress: true }
-        };
-
-        html2pdf().set(opt).from(element).save().then(() => {
-            actionCols.forEach(col => col.style.display = '');
+        document.querySelectorAll('.flight-card').forEach(card => {
+            if (!uploadedSubLogo) card.querySelector('.sub-icon').src = cfg.logo;
+            card.querySelector('.op-name').innerText = cfg.op;
+            card.querySelector('.hand-bag-val').innerText = cfg.hand;
+            card.querySelector('.class-sel').innerHTML = cfg.classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            card.querySelector('.bag-dropdown').innerHTML = cfg.check.map(c => `<option value="${c}">${c}</option>`).join('');
+            card.querySelector('.class-sel').style.color = card.querySelector('.bag-dropdown').style.color = cfg.theme;
+            card.querySelectorAll('.timeline-dot').forEach(dot => dot.style.backgroundColor = cfg.theme);
+            card.querySelector('.timeline-line').style.borderTopColor = cfg.theme;
+            card.querySelector('.dur-txt-box').style.color = cfg.theme;
         });
     }
 
+    function addFlightBlock() {
+        const type = document.getElementById('airline-select').value;
+        const cfg = configs[type];
+        const div = document.createElement('div');
+        div.className = 'flight-card';
+        const currentSubLogo = uploadedSubLogo ? uploadedSubLogo : cfg.logo;
+        div.innerHTML = `
+            <div class="flight-bar">
+                <div contenteditable="true">Tp. Hồ Chí Minh ✈ Hà Nội</div>
+                <div style="display:flex; align-items:center;"><div class="mini-logo"><img class="sub-icon" src="${currentSubLogo}"></div><button class="remove-btn" onclick="this.closest('.flight-card').remove()">×</button></div>
+            </div>
+            <div class="flight-main-body">
+                <div class="f-info-left">
+                    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;" contenteditable="true">Thứ 6, 17 tháng 04 2026</div>
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <div style="text-align:left;"><div style="font-size:28px; font-weight:bold;" contenteditable="true">18:00</div><div style="font-size:22px; font-weight:bold;" contenteditable="true">SGN</div></div>
+                        <div class="timeline-container"><div class="timeline-line"></div><div class="timeline-dot dot-left"></div><div class="dur-txt-box" contenteditable="true">02 giờ 10 phút</div><div class="timeline-dot dot-right"></div></div>
+                        <div style="text-align:right;"><div style="font-size:22px; font-weight:bold;" contenteditable="true">HAN</div><div style="font-size:28px; font-weight:bold;" contenteditable="true">20:10</div></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-top:5px;">
+                        <div><div contenteditable="true">Sân bay Tân Sơn Nhất</div><div style="font-weight:bold; color:#000;" contenteditable="true">Nhà ga T3</div></div>
+                        <div style="text-align:right;"><div contenteditable="true">Sân bay Nội Bài</div><div style="font-weight:bold; color:#000;" contenteditable="true">Nhà ga T1</div></div>
+                    </div>
+                    <div style="font-size:13px; margin-top:15px;">Hãng khai thác: <b class="op-name" contenteditable="true">${cfg.op}</b></div>
+                </div>
+                <div class="f-info-right">
+                    <div>Chuyến bay: <b contenteditable="true">VN218</b></div>
+                    <div>Tàu bay: <b contenteditable="true">Airbus A350</b></div>
+                    <div>Hạng ghế: <select class="clean-select class-sel"></select></div>
+                    <div>Hành lý ký gửi: <select class="clean-select bag-dropdown"></select></div>
+                    <div>Hành lý xách tay: <b class="hand-bag-val" contenteditable="true">${cfg.hand}</b></div>
+                </div>
+            </div>`;
+        document.getElementById('flight-list').appendChild(div);
+        updateTheme();
+    }
+
     function addPassenger() {
-        const table = document.getElementById("passenger-table").getElementsByTagName('tbody')[0];
-        const newRow = table.insertRow();
-        newRow.innerHTML = `<td contenteditable="true">MS</td><td class="passenger-name" style="font-weight: bold; text-transform: uppercase;" contenteditable="true">TÊN KHÁCH</td><td contenteditable="true">CONFIRMED</td><td class="action-col" onclick="removePassenger(this)" style="color:red; cursor:pointer; text-align:center;">×</td>`;
-        newRow.querySelector('.passenger-name').addEventListener('input', updateQR);
+        const div = document.createElement('div');
+        div.className = "pax-item";
+        div.innerHTML = `<span class="pax-name" contenteditable="true">TEN HANH KHACH</span><button class="pax-del-btn" onclick="this.parentElement.remove()">×</button>`;
+        document.getElementById('passenger-list').appendChild(div);
     }
 
-    function removePassenger(btn) { if (document.querySelectorAll('#passenger-table tbody tr').length > 1) { btn.parentNode.remove(); updateQR(); } }
-    
-    function toggleTripMode() {
-        const isRoundTrip = document.getElementById('roundtrip-toggle').checked;
-        document.getElementById('return-flight-section').style.display = isRoundTrip ? 'block' : 'none';
-        document.querySelectorAll('.return-baggage-row').forEach(row => row.style.display = isRoundTrip ? 'table-row' : 'none');
-    }
-
-    function loadLogo(event) {
+    function loadMainLogo(event) {
         const reader = new FileReader();
-        reader.onload = () => document.getElementById('ticket-logo').src = reader.result;
+        reader.onload = () => { document.getElementById('ticket-logo').src = reader.result; };
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    function updateQR() {
-        const pnr = document.getElementById('pnr-input').innerText.trim().toUpperCase();
-        const firstPass = document.querySelector('.passenger-name');
-        const name = firstPass ? firstPass.innerText.trim().toUpperCase().replace(/\s+/g, '-') : "GUEST";
-        document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${pnr}-${name}`;
+    function loadSubLogo(event) {
+        const reader = new FileReader();
+        reader.onload = () => { uploadedSubLogo = reader.result; document.querySelectorAll('.sub-icon').forEach(img => img.src = reader.result); };
+        reader.readAsDataURL(event.target.files[0]);
     }
 
-    document.getElementById('pnr-input').addEventListener('input', updateQR);
-    document.querySelector('.passenger-name').addEventListener('input', updateQR);
-</script>
+    function exportPDF() {
+        const element = document.getElementById('ticket-content');
+        
+        // Lấy tên khách hàng đầu tiên và mã PNR để làm tên file
+        let firstPax = document.querySelector('.pax-name') ? document.querySelector('.pax-name').innerText.trim() : "Ve_SenViet";
+        let pnr = document.getElementById('pnr-val').innerText.trim();
+        let fileName = `${firstPax}_${pnr}.pdf`;
 
+        html2pdf().set({ 
+            margin: 0, 
+            filename: fileName, 
+            html2canvas: { scale: 4, useCORS: true }, 
+            jsPDF: { format: 'a4' } 
+        }).from(element).save();
+    }
+
+    addFlightBlock();
+</script>
 </body>
 </html>
