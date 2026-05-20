@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ thống Vé v24.6 - Sen Việt Group (Smart Filename)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root { --current-theme: #006784; }
-        body { font-family: 'Arial', sans-serif; background-color: #444; padding: 20px; color: #333; margin: 0; }
+        body { 
+            font-family: 'Roboto', Arial, sans-serif; 
+            background-color: #444; 
+            padding: 20px; 
+            color: #333; 
+            margin: 0; 
+            -webkit-font-smoothing: antialiased;
+        }
         
         .admin-panel { max-width: 850px; margin: 0 auto 15px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-top: 5px solid var(--current-theme); }
         .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -45,14 +55,15 @@
         .dot-right { right: 0; }
         .dur-txt-box { background: white; padding: 0 12px; font-size: 12px; color: var(--current-theme); font-weight: bold; position: relative; z-index: 3; }
 
-        .clean-select { border: none; background: transparent; font-weight: bold; color: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; }
+        .clean-select { border: none; background: transparent; font-weight: bold; color: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; font-family: inherit; }
 
         .footer-banner { background: var(--current-theme); color: white; padding: 8px 20px; margin: 0 30px; font-weight: bold; }
-        .footer-text { border: 1px solid #ddd; margin: 0 30px 20px; padding: 15px; font-size: 12px; line-height: 1.7; }
+        .footer-text { border: 1px solid #ddd; margin: 0 30px 20px; padding: 15px; font-size: 13px; line-height: 1.7; }
         .bottom-strip { background: var(--current-theme); padding: 12px 30px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .remove-btn { background: rgba(0,0,0,0.2); border: none; color: white; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-weight: bold; margin-left: 10px; }
 
-        [contenteditable="true"]:hover { background: #fffde7; outline: 1px dashed #ccc; }
+        [contenteditable="true"] { outline: none; transition: background 0.2s; }
+        [contenteditable="true"]:hover, [contenteditable="true"]:focus { background: #fffde7; outline: 1px dashed #ccc; }
 
         @media print { 
             .admin-panel, .remove-btn, .pax-del-btn { display: none !important; } 
@@ -89,7 +100,7 @@
         </div>
 
         <div class="pnr-row">
-            <div class="pnr-box">Mã đặt chỗ: <span id="pnr-val" contenteditable="true">BOOKING</span></div>
+            <div class="pnr-box">Mã đặt chỗ: <span id="pnr-val" contenteditable="true" spellcheck="false">BOOKING</span></div>
             <div class="status-wrapper">
                 Trạng thái: 
                 <div class="status-box" id="status-container">
@@ -105,7 +116,7 @@
         <div class="section-tag">Thông tin hành khách</div>
         <div id="passenger-list">
             <div class="pax-item">
-                <span class="pax-name" contenteditable="true">NGUYEN VAN A</span>
+                <span class="pax-name" contenteditable="true" spellcheck="false">NGUYEN VAN A</span>
                 <button class="pax-del-btn" onclick="this.parentElement.remove()">×</button>
             </div>
         </div>
@@ -114,15 +125,15 @@
         <div id="flight-list"></div>
 
         <div class="footer-banner">Quý khách lưu ý</div>
-        <div class="footer-text" contenteditable="true">
+        <div class="footer-text" contenteditable="true" spellcheck="false">
             - Quý khách có mặt tại sân bay trước 90 phút (nội địa), 180 phút (quốc tế).<br>
             - Vé phải được sử dụng đúng và đủ thứ tự chuyến bay trên mặt vé.<br><br>
             <b>Cảm ơn quý khách đã sử dụng dịch vụ của Sen Việt Group! Chúc quý khách chuyến bay tốt đẹp!</b>
         </div>
 
         <div class="bottom-strip">
-            <div contenteditable="true">SEN VIỆT TRAVEL GROUP</div>
-            <div contenteditable="true" style="font-size: 15px;">Hotline: 0328.282828</div>
+            <div contenteditable="true" spellcheck="false">SEN VIỆT TRAVEL GROUP</div>
+            <div contenteditable="true" spellcheck="false" style="font-size: 15px;">Hotline: 0328.282828</div>
         </div>
     </div>
 </div>
@@ -169,29 +180,36 @@
         const currentSubLogo = uploadedSubLogo ? uploadedSubLogo : cfg.logo;
         div.innerHTML = `
             <div class="flight-bar">
-                <div contenteditable="true">Tp. Hồ Chí Minh ✈ Hà Nội</div>
+                <div contenteditable="true" spellcheck="false">Tp. Hồ Chí Minh ✈ Hà Nội</div>
                 <div style="display:flex; align-items:center;"><div class="mini-logo"><img class="sub-icon" src="${currentSubLogo}"></div><button class="remove-btn" onclick="this.closest('.flight-card').remove()">×</button></div>
             </div>
             <div class="flight-main-body">
                 <div class="f-info-left">
-                    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;" contenteditable="true">Thứ 6, 17 tháng 04 2026</div>
+                    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;" contenteditable="true" spellcheck="false">Thứ 6, 17 tháng 04 2026</div>
                     <div style="display:flex; align-items:center; justify-content:space-between;">
-                        <div style="text-align:left;"><div style="font-size:28px; font-weight:bold;" contenteditable="true">18:00</div><div style="font-size:22px; font-weight:bold;" contenteditable="true">SGN</div></div>
-                        <div class="timeline-container"><div class="timeline-line"></div><div class="timeline-dot dot-left"></div><div class="dur-txt-box" contenteditable="true">02 giờ 10 phút</div><div class="timeline-dot dot-right"></div></div>
-                        <div style="text-align:right;"><div style="font-size:22px; font-weight:bold;" contenteditable="true">HAN</div><div style="font-size:28px; font-weight:bold;" contenteditable="true">20:10</div></div>
+                        <div style="text-align:left;">
+                            <div style="font-size:28px; font-weight:bold;" contenteditable="true" spellcheck="false">18:00</div>
+                            <div style="font-size:22px; font-weight:bold;" contenteditable="true" spellcheck="false">SGN</div>
+                        </div>
+                        <div class="timeline-container"><div class="timeline-line"></div><div class="timeline-dot dot-left"></div><div class="dur-txt-box" contenteditable="true" spellcheck="false">02 giờ 10 phút</div><div class="timeline-dot dot-right"></div></div>
+                        <div style="text-align:right;">
+                            <!-- Đã sửa: Giờ (20:10) lên trên, mã HAN xuống dưới cho đồng nhất -->
+                            <div style="font-size:28px; font-weight:bold;" contenteditable="true" spellcheck="false">20:10</div>
+                            <div style="font-size:22px; font-weight:bold;" contenteditable="true" spellcheck="false">HAN</div>
+                        </div>
                     </div>
                     <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-top:5px;">
-                        <div><div contenteditable="true">Sân bay Tân Sơn Nhất</div><div style="font-weight:bold; color:#000;" contenteditable="true">Nhà ga T3</div></div>
-                        <div style="text-align:right;"><div contenteditable="true">Sân bay Nội Bài</div><div style="font-weight:bold; color:#000;" contenteditable="true">Nhà ga T1</div></div>
+                        <div><div contenteditable="true" spellcheck="false">Sân bay Tân Sơn Nhất</div><div style="font-weight:bold; color:#000;" contenteditable="true" spellcheck="false">Nhà ga T3</div></div>
+                        <div style="text-align:right;"><div contenteditable="true" spellcheck="false">Sân bay Nội Bài</div><div style="font-weight:bold; color:#000;" contenteditable="true" spellcheck="false">Nhà ga T1</div></div>
                     </div>
-                    <div style="font-size:13px; margin-top:15px;">Hãng khai thác: <b class="op-name" contenteditable="true">${cfg.op}</b></div>
+                    <div style="font-size:13px; margin-top:15px;">Hãng khai thác: <b class="op-name" contenteditable="true" spellcheck="false">${cfg.op}</b></div>
                 </div>
                 <div class="f-info-right">
-                    <div>Chuyến bay: <b contenteditable="true">VN218</b></div>
-                    <div>Tàu bay: <b contenteditable="true">Airbus A350</b></div>
+                    <div>Chuyến bay: <b contenteditable="true" spellcheck="false">VN218</b></div>
+                    <div>Tàu bay: <b contenteditable="true" spellcheck="false">Airbus A350</b></div>
                     <div>Hạng ghế: <select class="clean-select class-sel"></select></div>
                     <div>Hành lý ký gửi: <select class="clean-select bag-dropdown"></select></div>
-                    <div>Hành lý xách tay: <b class="hand-bag-val" contenteditable="true">${cfg.hand}</b></div>
+                    <div>Hành lý xách tay: <b class="hand-bag-val" contenteditable="true" spellcheck="false">${cfg.hand}</b></div>
                 </div>
             </div>`;
         document.getElementById('flight-list').appendChild(div);
@@ -201,7 +219,7 @@
     function addPassenger() {
         const div = document.createElement('div');
         div.className = "pax-item";
-        div.innerHTML = `<span class="pax-name" contenteditable="true">TEN HANH KHACH</span><button class="pax-del-btn" onclick="this.parentElement.remove()">×</button>`;
+        div.innerHTML = `<span class="pax-name" contenteditable="true" spellcheck="false">TEN HANH KHACH</span><button class="pax-del-btn" onclick="this.parentElement.remove()">×</button>`;
         document.getElementById('passenger-list').appendChild(div);
     }
 
@@ -220,7 +238,8 @@
     function exportPDF() {
         const element = document.getElementById('ticket-content');
         
-        // Lấy tên khách hàng đầu tiên và mã PNR để làm tên file
+        document.body.style.pointerEvents = 'none';
+
         let firstPax = document.querySelector('.pax-name') ? document.querySelector('.pax-name').innerText.trim() : "Ve_SenViet";
         let pnr = document.getElementById('pnr-val').innerText.trim();
         let fileName = `${firstPax}_${pnr}.pdf`;
@@ -228,9 +247,15 @@
         html2pdf().set({ 
             margin: 0, 
             filename: fileName, 
-            html2canvas: { scale: 4, useCORS: true }, 
-            jsPDF: { format: 'a4' } 
-        }).from(element).save();
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true,
+                windowWidth: 850 
+            }, 
+            jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } 
+        }).from(element).save().then(() => {
+            document.body.style.pointerEvents = 'auto';
+        });
     }
 
     addFlightBlock();
