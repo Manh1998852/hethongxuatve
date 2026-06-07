@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Vé v24.6 - Sen Việt Group (Smart Filename)</title>
+    <title>Hệ thống Vé v24.6 - Sen Việt Group (Perfect Single Page)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -19,19 +19,41 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        .admin-panel { max-width: 850px; margin: 0 auto 15px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-top: 5px solid var(--current-theme); }
+        .admin-panel { max-width: 794px; margin: 0 auto 15px; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-top: 5px solid var(--current-theme); }
         .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
         .btn-action { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
 
-        #ticket-wrapper { background: #fff; width: 850px; margin: 0 auto; box-shadow: 0 0 25px rgba(0,0,0,0.2); }
-        .ticket-header { background: var(--current-theme); padding: 15px 30px; display: flex; align-items: center; }
-        .logo-main { height: 45px; }
+        /* Khung bọc bên ngoài cố định kích thước chuẩn */
+        #ticket-wrapper { 
+            background: #fff; 
+            width: 794px; 
+            height: 1123px; /* Khóa cứng chiều cao chuẩn của 1 trang A4 đứng */
+            margin: 0 auto; 
+            box-shadow: 0 0 25px rgba(0,0,0,0.2); 
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden; /* Không cho nội dung tràn ra ngoài phá vỡ layout */
+        }
+        
+        /* Khung nội dung thực tế - Sẽ được scale tự động bằng JS khi xuất */
+        .print-container {
+            width: 794px;
+            padding: 0;
+            margin: 0;
+            background: #fff;
+            display: block;
+            box-sizing: border-box;
+            transform-origin: top left; /* Neo góc trên bên trái để thu nhỏ không bị lệch */
+        }
+
+        .ticket-header { background: var(--current-theme); padding: 15px 30px; display: flex; align-items: center; height: 45px; }
+        .logo-main { height: 45px; display: block; max-width: 250px; object-fit: contain; }
 
         .pnr-row { padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; }
         .pnr-box { background: var(--current-theme); color: white; padding: 12px 25px; border-radius: 6px; font-size: 19px; font-weight: bold; }
 
         .status-wrapper { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 15px; }
-        .status-box { border: 2px solid #28a745; padding: 6px 15px; border-radius: 6px; text-transform: uppercase; }
+        .status-box { border: 2px solid #28a745; padding: 6px 15px; border-radius: 6px; text-transform: uppercase; background: #fff; }
 
         .section-tag { margin: 10px 30px; display: flex; align-items: center; font-size: 18px; font-weight: bold; }
         .section-tag::before { content: ""; display: inline-block; width: 4px; height: 20px; background: var(--current-theme); margin-right: 10px; }
@@ -39,38 +61,49 @@
         .pax-item { background: #f8f9fa; margin: 5px 30px 12px; padding: 12px 20px; border: 1px solid #eee; border-radius: 6px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .pax-del-btn { color: #e31937; cursor: pointer; font-size: 18px; border: none; background: none; font-weight: bold; }
 
-        .flight-card { border: 1px solid #ddd; border-radius: 12px; margin: 0 30px 20px; overflow: hidden; }
+        .flight-card { border: 1px solid #ddd; border-radius: 12px; margin: 0 30px 20px; overflow: hidden; background: #fff; }
         .flight-bar { background: var(--current-theme); color: white; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .mini-logo { background: white; padding: 3px 10px; border-radius: 4px; display: flex; align-items: center; height: 22px; }
-        .mini-logo img { height: 16px; }
+        
+        .mini-logo { display: flex; align-items: center; justify-content: center; height: 24px; }
+        .mini-logo img { height: 24px; max-width: 120px; object-fit: contain; display: block; filter: brightness(0) invert(1); } 
 
         .flight-main-body { display: flex; padding: 25px 20px; }
         .f-info-left { flex: 2; border-right: 1px dotted #999; padding-right: 20px; }
         .f-info-right { flex: 1; padding-left: 25px; font-size: 13px; line-height: 1.9; }
 
-        .timeline-container { flex-grow: 1; margin: 0 15px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 150px; }
+        .timeline-container { flex-grow: 1; margin: 0 15px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 130px; }
         .timeline-line { width: 100%; height: 1px; border-top: 1px dotted var(--current-theme); position: absolute; top: 50%; left: 0; z-index: 1; }
         .timeline-dot { width: 7px; height: 7px; background: var(--current-theme); border-radius: 50%; position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
         .dot-left { left: 0; }
         .dot-right { right: 0; }
-        .dur-txt-box { background: white; padding: 0 12px; font-size: 12px; color: var(--current-theme); font-weight: bold; position: relative; z-index: 3; }
+        .dur-txt-box { background: white; padding: 0 8px; font-size: 11px; color: var(--current-theme); font-weight: bold; position: relative; z-index: 3; text-align: center; white-space: nowrap; }
 
-        .clean-select { border: none; background: transparent; font-weight: bold; color: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; font-family: inherit; }
+        .clean-select { border: none; background: transparent; font-weight: bold; color: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; font-family: inherit; padding-right: 4px; }
 
         .footer-banner { background: var(--current-theme); color: white; padding: 8px 20px; margin: 0 30px; font-weight: bold; }
-        .footer-text { border: 1px solid #ddd; margin: 0 30px 20px; padding: 15px; font-size: 13px; line-height: 1.7; }
-        .bottom-strip { background: var(--current-theme); padding: 12px 30px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .remove-btn { background: rgba(0,0,0,0.2); border: none; color: white; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        .footer-text { border: 1px solid #ddd; margin: 0 30px 20px; padding: 15px; font-size: 13px; line-height: 1.7; background: #fff; }
+        
+        .bottom-strip { background: var(--current-theme); padding: 12px 30px; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; }
+        .remove-btn { background: rgba(0,0,0,0.2); border: none; color: white; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-weight: bold; margin-left: 12px; display: flex; align-items: center; justify-content: center; line-height: 1; }
 
-        [contenteditable="true"] { outline: none; transition: background 0.2s; }
-        [contenteditable="true"]:hover, [contenteditable="true"]:focus { background: #fffde7; outline: 1px dashed #ccc; }
+        [contenteditable="true"] { outline: none; transition: background 0.1s; }
+        [contenteditable="true"]:hover, [contenteditable="true"]:focus { background: rgba(0, 0, 0, 0.05); outline: 1px dashed #777; }
+        
+        .pnr-box [contenteditable="true"]:hover, .pnr-box [contenteditable="true"]:focus {
+            background: rgba(255, 255, 255, 0.2) !important;
+            outline: 1px dashed #fff;
+        }
+
+        #ticket-content, #ticket-content * {
+            font-family: 'Roboto', Arial, sans-serif !important;
+        }
+
+        /* Ẩn các nút điều khiển hệ thống khi tiến hành in/render hình ảnh */
+        .hide-on-print { display: none !important; }
 
         @media print { 
             .admin-panel, .remove-btn, .pax-del-btn { display: none !important; } 
             .clean-select { appearance: none !important; -webkit-appearance: none !important; }
-            .pax-item { background: #f8f9fa !important; border: 1px solid #eee !important; -webkit-print-color-adjust: exact; }
-            .pnr-box { background: var(--current-theme) !important; -webkit-print-color-adjust: exact; }
-            .status-box { -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -89,14 +122,15 @@
         <input type="file" id="logo-sub-in" hidden onchange="loadSubLogo(event)">
         <button class="btn-action" onclick="addPassenger()">👤 + Khách</button>
         <button class="btn-action" style="background:var(--current-theme); color:white;" onclick="addFlightBlock()">✈️ + CHẶNG</button>
-        <button class="btn-action" style="background:#28a745; color:white; margin-left:auto;" onclick="exportPDF()">📥 XUẤT PDF</button>
+        
+        <button class="btn-action" style="background:#28a745; color:white; margin-left:auto;" onclick="exportPDF()">📥 XUẤT PDF (MỘT TRANG CHUẨN)</button>
     </div>
 </div>
 
 <div id="ticket-wrapper">
-    <div id="ticket-content">
+    <div id="ticket-content" class="print-container">
         <div class="ticket-header" id="header-bg">
-            <img id="ticket-logo" class="logo-main" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png">
+            <img id="ticket-logo" class="logo-main" src="">
         </div>
 
         <div class="pnr-row">
@@ -133,18 +167,28 @@
 
         <div class="bottom-strip">
             <div contenteditable="true" spellcheck="false">SEN VIỆT TRAVEL GROUP</div>
-            <div contenteditable="true" spellcheck="false" style="font-size: 15px;">Hotline: 0328.282828</div>
+            <div contenteditable="true" spellcheck="false" style="font-size: 15px;">CHÚC QUÝ KHÁCH CÓ CHUYẾN BAY AN TOÀN</div>
         </div>
     </div>
 </div>
 
 <script>
     let uploadedSubLogo = null;
+    let uploadedMainLogo = null;
+    
     const configs = {
-        vna: { theme: "#006784", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Vietnam_Airlines_logo_2015.svg/1280px-Vietnam_Airlines_logo_2015.svg.png", hand: "10kg", classes: ["Economy", "Premium", "Business"], check: ["23kg / 1 kiện", "46kg / 2 kiện", "32kg / 1 kiện", "64kg / 2 kiện"], op: "Vietnam Airlines" },
-        vj: { theme: "#e31937", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8d/VietJet_Air_logo.png", hand: "07kg", classes: ["Economy", "Deluxe", "SkyBoss"], check: ["20kg", "30kg", "40kg", "Không ký gửi"], op: "Vietjet Air" },
-        sun: { theme: "#8b0000", logo: "https://i.ibb.co/Vvz8jYq/sun-pq-logo.png", hand: "07kg", classes: ["Economy"], check: ["23kg / 1 kiện"], op: "Sun PhuQuoc Airways" }
+        vna: { theme: "#006784", logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAA8CAMAAAAsYgocAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJQTFRF////07W179zc/v7+8vLy5OTk9PT07u7u7e3t6urq8fHxR6XU////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnm9mEwAAACV0Uk5T///////////////////////////////////////////////////8AOfg6gAAAnVJREFUeNrs2OFSg0AMBOC7gEAs938vd70eDlsYOnY69X6m05Dls8mSAtGf/Y99ZgXbI7b/t5w6O+w8WofbF9g+st3fAtvXF9juYLu7K9g+Crb3u7XpAewW2BXYPrFdFth9Z7skvYAtvRywU7AtWpYvF7B7BvbeYAt2XW6fXmB7z3Z7C2w39KSwfWK79u87YHsK7M6uYLe17Wmw3dHw3mD7wHZpWhLYpfcG23u227rAdgZ2CmwKtiXYV2gLsDv6p8A2vTfAnmCbwD7F9hZsCranwXatf7uGfYZtZNsVfGf7T2bE9v8GMAAMHwI7m9atYQAAAABJRU5ErkJggg==", hand: "10kg", classes: ["Economy", "Premium", "Business"], check: ["23kg / 1 kiện", "46kg / 2 kiện", "32kg / 1 kiện", "64kg / 2 kiện"], op: "Vietnam Airlines" },
+        vj: { theme: "#e31937", logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAA8CAMAAAAsYgocAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAGBQTFRF////e6XW79zc/v7+8vLy5OTk9PT07u7u7e3t6urq8fHx////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////K070vAAAACB0Uk5T/////////////////////////////////////////wBc9u7uAAABb0lEQVR42uyb2XLDMAhE4wVsh9v//9pOm9pOnCGO0w7vS8beZgYbyyNoFv9j//Z8sN2wff29yKmxw8Gjdbh9ge0j2/0tsH19ge0Otrt7BdtHwfZ+F5vugF2CXYHtE9tlgd13tkvSC9jSywE7BdugZXlyAbvHwN4bbMGuy+3TC2zv2W5vge2GnhS2T2zXfn0HbE+B3dkV7La2PQ22OxreG2wf2C5NSwK79N5ge892WxfYzsBOgU3BtgT7Cm0Bdkf/FNim9wbYE2wT2KfY3oJNwfY02K71b9ewz7CNbLuC72z/yYw4/m8AAwBzWglgXnEwIQAAAABJRU5ErkJoggling==", hand: "07kg", classes: ["Economy", "Deluxe", "SkyBoss"], check: ["20kg", "30kg", "40kg", "Không ký gửi"], op: "Vietjet Air" },
+        sun: { theme: "#8b0000", logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAA8CAMAAAAsYgocAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAF5QTFRF////m7W179zc/v7+8vLy5OTk9PT07u7u7e3t6urq8fHx////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////wYvNfAAAACB0Uk5T/////////////////////////////////////////wBc9u7uAAABZklEQVR42uyby3LDMAhE4wXshjv//9pOm9pOnCGO0w7vS8beZgYbyyNoFv9j//Z8sN2wff29yKmxw8Gjdbh9ge0j2/0tsH19ge0Otrt7BdtHwfZ+F5vugF2CXYHtE9tlgd13tkvSC9jSywE7BdugZXlyAbvHwN4bbMGuy+3TC2zv2W5vge2GnhS2T2zXfn0HbE+B3dkV7La2PQ22OxreG2wf2C5NSwK79N5ge892WxfYzsBOgU3BtgT7Cm0Bdkf/FNim9wbYE2wT2KfY3oJNwfY02K71b9VEwz7CNbLuC72z/yYw4/m8AAwBzYglgXnY7IQAAAABJRU5ErkJoggling==", hand: "07kg", classes: ["Economy"], check: ["23kg / 1 kiện"], op: "Sun PhuQuoc Airways" }
     };
+
+    document.addEventListener('paste', function(e) {
+        if (e.target.hasAttribute('contenteditable') || e.target.closest('[contenteditable="true"]')) {
+            e.preventDefault();
+            const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+        }
+    });
 
     function handleStatusChange(sel) {
         const box = document.getElementById('status-container');
@@ -157,10 +201,20 @@
         const cfg = configs[type];
         document.documentElement.style.setProperty('--current-theme', cfg.theme);
         document.getElementById('header-bg').style.backgroundColor = cfg.theme;
-        document.getElementById('ticket-logo').src = cfg.logo;
+        
+        if (!uploadedMainLogo) {
+            document.getElementById('ticket-logo').src = cfg.logo;
+        }
 
         document.querySelectorAll('.flight-card').forEach(card => {
-            if (!uploadedSubLogo) card.querySelector('.sub-icon').src = cfg.logo;
+            const subImg = card.querySelector('.sub-icon');
+            if (!uploadedSubLogo) {
+                subImg.src = cfg.logo;
+                subImg.style.filter = "brightness(0) invert(1)"; 
+            } else {
+                subImg.src = uploadedSubLogo;
+                subImg.style.filter = "none"; 
+            }
             card.querySelector('.op-name').innerText = cfg.op;
             card.querySelector('.hand-bag-val').innerText = cfg.hand;
             card.querySelector('.class-sel').innerHTML = cfg.classes.map(c => `<option value="${c}">${c}</option>`).join('');
@@ -178,31 +232,32 @@
         const div = document.createElement('div');
         div.className = 'flight-card';
         const currentSubLogo = uploadedSubLogo ? uploadedSubLogo : cfg.logo;
+        const currentFilter = uploadedSubLogo ? "none" : "brightness(0) invert(1)";
+        
         div.innerHTML = `
             <div class="flight-bar">
                 <div contenteditable="true" spellcheck="false">Tp. Hồ Chí Minh ✈ Hà Nội</div>
-                <div style="display:flex; align-items:center;"><div class="mini-logo"><img class="sub-icon" src="${currentSubLogo}"></div><button class="remove-btn" onclick="this.closest('.flight-card').remove()">×</button></div>
+                <div style="display:flex; align-items:center;"><div class="mini-logo"><img class="sub-icon" src="${currentSubLogo}" style="filter: ${currentFilter};"></div><button class="remove-btn" onclick="this.closest('.flight-card').remove()">×</button></div>
             </div>
             <div class="flight-main-body">
                 <div class="f-info-left">
-                    <div style="font-size:18px; font-weight:bold; margin-bottom:12px;" contenteditable="true" spellcheck="false">Thứ 6, 17 tháng 04 2026</div>
+                    <div style="font-size:17px; font-weight:bold; margin-bottom:12px;" contenteditable="true" spellcheck="false">Thứ 6, 17 tháng 04 2026</div>
                     <div style="display:flex; align-items:center; justify-content:space-between;">
                         <div style="text-align:left;">
-                            <div style="font-size:28px; font-weight:bold;" contenteditable="true" spellcheck="false">18:00</div>
-                            <div style="font-size:22px; font-weight:bold;" contenteditable="true" spellcheck="false">SGN</div>
+                            <div style="font-size:26px; font-weight:bold;" contenteditable="true" spellcheck="false">18:00</div>
+                            <div style="font-size:20px; font-weight:bold;" contenteditable="true" spellcheck="false">SGN</div>
                         </div>
                         <div class="timeline-container"><div class="timeline-line"></div><div class="timeline-dot dot-left"></div><div class="dur-txt-box" contenteditable="true" spellcheck="false">02 giờ 10 phút</div><div class="timeline-dot dot-right"></div></div>
                         <div style="text-align:right;">
-                            <!-- Đã sửa: Giờ (20:10) lên trên, mã HAN xuống dưới cho đồng nhất -->
-                            <div style="font-size:28px; font-weight:bold;" contenteditable="true" spellcheck="false">20:10</div>
-                            <div style="font-size:22px; font-weight:bold;" contenteditable="true" spellcheck="false">HAN</div>
+                            <div style="font-size:26px; font-weight:bold;" contenteditable="true" spellcheck="false">20:10</div>
+                            <div style="font-size:20px; font-weight:bold;" contenteditable="true" spellcheck="false">HAN</div>
                         </div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#444; margin-top:5px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:#444; margin-top:5px;">
                         <div><div contenteditable="true" spellcheck="false">Sân bay Tân Sơn Nhất</div><div style="font-weight:bold; color:#000;" contenteditable="true" spellcheck="false">Nhà ga T3</div></div>
                         <div style="text-align:right;"><div contenteditable="true" spellcheck="false">Sân bay Nội Bài</div><div style="font-weight:bold; color:#000;" contenteditable="true" spellcheck="false">Nhà ga T1</div></div>
                     </div>
-                    <div style="font-size:13px; margin-top:15px;">Hãng khai thác: <b class="op-name" contenteditable="true" spellcheck="false">${cfg.op}</b></div>
+                    <div style="font-size:12px; margin-top:15px;">Hãng khai thác: <b class="op-name" contenteditable="true" spellcheck="false">${cfg.op}</b></div>
                 </div>
                 <div class="f-info-right">
                     <div>Chuyến bay: <b contenteditable="true" spellcheck="false">VN218</b></div>
@@ -225,37 +280,83 @@
 
     function loadMainLogo(event) {
         const reader = new FileReader();
-        reader.onload = () => { document.getElementById('ticket-logo').src = reader.result; };
+        reader.onload = () => { uploadedMainLogo = reader.result; document.getElementById('ticket-logo').src = reader.result; };
         reader.readAsDataURL(event.target.files[0]);
     }
 
     function loadSubLogo(event) {
         const reader = new FileReader();
-        reader.onload = () => { uploadedSubLogo = reader.result; document.querySelectorAll('.sub-icon').forEach(img => img.src = reader.result); };
+        reader.onload = () => { 
+            uploadedSubLogo = reader.result; 
+            document.querySelectorAll('.sub-icon').forEach(img => {
+                img.src = reader.result; 
+                img.style.filter = "none"; 
+            }); 
+        };
         reader.readAsDataURL(event.target.files[0]);
     }
 
+    // THUẬT TOÁN ĐỘC QUYỀN: Đo độ dài thực tế và dùng kĩ thuật ma trận để ép khít 1 trang A4
     function exportPDF() {
-        const element = document.getElementById('ticket-content');
+        if (document.activeElement) { document.activeElement.blur(); }
+        window.getSelection().removeAllRanges();
         
+        const wrapper = document.getElementById('ticket-wrapper');
+        const container = document.getElementById('ticket-content');
+        
+        // 1. Tạm thời ẩn các nút xóa đỏ để ảnh xuất ra được sạch đẹp nhất
+        const deleteButtons = document.querySelectorAll('.pax-del-btn, .remove-btn');
+        deleteButtons.forEach(btn => btn.classList.add('hide-on-print'));
+
+        // Khóa chuột người dùng thao tác trong giây lát để xử lý thuật toán
         document.body.style.pointerEvents = 'none';
 
-        let firstPax = document.querySelector('.pax-name') ? document.querySelector('.pax-name').innerText.trim() : "Ve_SenViet";
-        let pnr = document.getElementById('pnr-val').innerText.trim();
-        let fileName = `${firstPax}_${pnr}.pdf`;
+        setTimeout(() => {
+            let firstPax = document.querySelector('.pax-name') ? document.querySelector('.pax-name').innerText.trim() : "Ve_SenViet";
+            let pnr = document.getElementById('pnr-val').innerText.trim();
+            let fileName = `${firstPax}_${pnr}.pdf`;
 
-        html2pdf().set({ 
-            margin: 0, 
-            filename: fileName, 
-            html2canvas: { 
-                scale: 2, 
-                useCORS: true,
-                windowWidth: 850 
-            }, 
-            jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } 
-        }).from(element).save().then(() => {
-            document.body.style.pointerEvents = 'auto';
-        });
+            // 2. Tính toán tỷ lệ chiều cao thực tế so với chiều cao tiêu chuẩn của A4 (1123px)
+            const currentHeight = container.scrollHeight;
+            const targetHeight = 1123;
+            
+            // Nếu độ dài vé lớn hơn chiều cao A4, tính toán hệ số co thu nhỏ (Scale)
+            if (currentHeight > targetHeight) {
+                const scaleRatio = targetHeight / currentHeight;
+                container.style.transform = `scale(${scaleRatio})`;
+            }
+
+            const opt = {
+                margin: 0,
+                filename: fileName,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { 
+                    scale: 2.5, 
+                    useCORS: true,
+                    logging: false,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 794,
+                    windowHeight: 1123,
+                    x: 0,
+                    y: 0
+                },
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+            };
+
+            // 3. Tiến hành xuất ảnh chụp màn hình vùng chọn wrapper chuẩn kích thước
+            html2pdf().set(opt).from(wrapper).save().then(() => {
+                // Trả lại trạng thái ban đầu sau khi xuất xong xuôi
+                container.style.transform = 'none';
+                deleteButtons.forEach(btn => btn.classList.remove('hide-on-print'));
+                document.body.style.pointerEvents = 'auto';
+            }).catch((err) => {
+                console.error(err);
+                container.style.transform = 'none';
+                deleteButtons.forEach(btn => btn.classList.remove('hide-on-print'));
+                document.body.style.pointerEvents = 'auto';
+            });
+        }, 400);
     }
 
     addFlightBlock();
